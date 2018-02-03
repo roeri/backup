@@ -17,4 +17,6 @@ public class RSyncResult {
 
     private int deletedFiles;
     private int deletedFolders;
+
+    //ADD START TIME, END TIME, DURATION ETC
 }
