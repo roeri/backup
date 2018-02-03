@@ -7,3 +7,6 @@ hs_err_pid*
 # Build output
 /out/
 /build/
+
+# Gradle stuff
+/.gradle/
