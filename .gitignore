@@ -1,6 +1,3 @@
-# Libs
-/.idea/libraries/
-
 # Log file
 *.log
 
@@ -13,3 +10,6 @@ hs_err_pid*
 
 # Gradle stuff
 /.gradle/
+
+# IntelliJ stuff
+/.idea/
