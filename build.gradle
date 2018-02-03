@@ -12,6 +12,7 @@ repositories {
 }
 
 dependencies {
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.4'
     compile group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.25'
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
     compile group: 'com.github.fracpete', name: 'rsync4j', version: '3.1.2-8'
