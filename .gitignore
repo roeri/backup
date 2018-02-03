@@ -1,3 +1,6 @@
+# Libs
+/.idea/libraries/
+
 # Log file
 *.log
 
