@@ -1,3 +1,13 @@
 {
-    "backupRootPath": "/home/robert/Tmp/backup/"
+    "backupRootPath": "/home/robert/Tmp/backup/",
+    "jobs": [
+        {
+            "name": "testJob1",
+            "sourcePath": "/home/robert/Tmp/test"
+        },
+        {
+            "name": "testJob2",
+            "sourcePath": "/home/robert/Tmp/test2"
+        }
+    ]
 }
