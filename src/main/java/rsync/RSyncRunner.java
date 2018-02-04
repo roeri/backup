@@ -1,7 +1,7 @@
 package rsync;
 
 import application.config.Job;
-import application.config.json.DBConfig;
+import application.config.DBConfig;
 import com.github.fracpete.processoutput4j.output.StreamingProcessOutput;
 import com.github.fracpete.rsync4j.RSync;
 import lombok.extern.slf4j.Slf4j;

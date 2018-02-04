@@ -1,6 +1,7 @@
 package application.config.json;
 
 import application.config.Config;
+import application.config.DBConfig;
 import application.config.Job;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

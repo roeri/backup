@@ -1,6 +1,5 @@
 package application.config;
 
-import application.config.json.DBConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

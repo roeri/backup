@@ -1,4 +1,4 @@
-package application.config.json;
+package application.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

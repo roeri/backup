@@ -1,5 +1,6 @@
 package application.config.json;
 
+import application.config.DBConfig;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DBConfigJson {
