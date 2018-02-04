@@ -4,29 +4,30 @@ import application.config.Config;
 import application.config.json.ConfigJson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import rsync.RSyncRunner;
 
 import java.io.File;
 import java.io.IOException;
 
 @Slf4j
 public class Main {
-    private static Config config = Config.EMPTY;
+    private static Application application;
 
     public static void main(String[] args) {
-        readConfigFile();
-        new RSyncRunner(config.isDryRun(), config.isCompress(), config.getDBConfig(), config.getBackupRootPath(), config.getJobs()).doRsync();
+        Config config = readConfigFile();
+        application = new Application(config);
     }
 
-    private static void readConfigFile() {
+    private static Config readConfigFile() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            ConfigJson configJson = objectMapper.readValue(new File(System.getProperty("user.home") + "/.backups.conf"), ConfigJson.class);
-            config = configJson.toConfig();
+            Config config = objectMapper.readValue(new File(System.getProperty("user.home") + "/.backups.conf"), ConfigJson.class).toConfig();
             log.debug("Config read successfully.");
+            return config;
         } catch (IOException e) {
-            log.error("Couldn't read config file. Exception: " + e.toString());
+            log.error("Couldn't read config file, exiting. Exception: " + e.toString());
             //TODO: Tell the user to create a config file.
+            System.exit(1);
+            return null;
         }
     }
 }

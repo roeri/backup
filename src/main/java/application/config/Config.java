@@ -15,6 +15,4 @@ public class Config {
     private boolean compress;
     private String backupRootPath;
     private List<Job> jobs;
-
-    public static final Config EMPTY = new Config(null, false, false, "", emptyList());
 }
