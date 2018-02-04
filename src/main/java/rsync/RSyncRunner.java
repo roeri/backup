@@ -42,22 +42,21 @@ public class RSyncRunner {
                 logResults(job, startTime, endTime, duration, outputHandler.getResult());
             } catch (Exception e) {
                 log.error("Failed to run rsync. Exception: " + e.toString());
-                //TODO: logFailure(job.getName));
+                //TODO: logFailure(job.getDatabase));
             }
         }
     }
 
     private void logResults(Job job, Timestamp startTime, Timestamp endTime, int duration, RSyncResult result) {
-        String url = "jdbc:mysql://" + dbConfig.getHost() + "/" + dbConfig.getName();
+        String url = "jdbc:mysql://" + dbConfig.getHostname() + "/" + dbConfig.getDatabase();
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection(url, dbConfig.getUser(), dbConfig.getPass());
+            conn = DriverManager.getConnection(url, dbConfig.getUsername(), dbConfig.getPassword());
             Statement st = conn.createStatement();
             String sql = String.format("insert into backups values('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
                     job.getName(), startTime, endTime, duration, result.getTransferredSize(), result.getSize(), result.getTransferSpeed(),
                     result.getNewFiles(), result.getDeletedFiles(), job.getSourcePath(), backupRootPath);
             st.executeUpdate(sql);
-            //"insert into simpletest values('" + job + "')"
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -6,10 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class DBConfig {
-    private String host;
-    private String name;
-    private String user;
-    private String pass;
-
-    public static final DBConfig EMPTY = new DBConfig("", "", "", "");
+    private String hostname;
+    private String database;
+    private String username;
+    private String password;
 }

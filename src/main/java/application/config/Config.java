@@ -15,5 +15,5 @@ public class Config {
     private String backupRootPath;
     private List<Job> jobs;
 
-    public static final Config EMPTY = new Config(DBConfig.EMPTY, "", emptyList());
+    public static final Config EMPTY = new Config(null, "", emptyList());
 }
