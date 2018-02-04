@@ -122,7 +122,7 @@ public class RSyncOutput implements StreamingProcessOwner {
             try {
                 size = Integer.parseInt(numberMatcher.group()); //Test with large numbers, may need to remove commas
             } catch (NumberFormatException e) {
-                System.out.println("ERROR: Couldn't parse size from: " + numberMatcher.group());
+                log.error("Couldn't parse size from: " + numberMatcher.group());
             }
         }
         resultBuilder.size(size);
@@ -134,7 +134,7 @@ public class RSyncOutput implements StreamingProcessOwner {
             try {
                 transferredSize = Integer.parseInt(numberMatcher.group()); //Test with large numbers, may need to remove commas
             } catch (NumberFormatException e) {
-                System.out.println("ERROR: Couldn't parse transferredSize from: " + numberMatcher.group());
+                log.error("Couldn't parse transferredSize from: " + numberMatcher.group());
             }
         }
         resultBuilder.transferredSize(transferredSize);
@@ -146,14 +146,13 @@ public class RSyncOutput implements StreamingProcessOwner {
             try {
                 transferSpeed = Integer.parseInt(numberMatcher.group()); //Test with large numbers, may need to remove commas
             } catch (NumberFormatException e) {
-                System.out.println("ERROR: Couldn't parse transferSpeed from: " + numberMatcher.group());
+                log.error("Couldn't parse transferSpeed from: " + numberMatcher.group());
             }
         }
         resultBuilder.transferSpeed(transferSpeed);
     }
 
     private void processError(String line) {
-        log.error("ERROR: " + line);
-        System.out.println("ERROR: " + line);
+        log.error("Problem with rsync: " + line);
     }
 }
