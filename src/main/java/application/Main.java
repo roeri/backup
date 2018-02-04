@@ -25,7 +25,6 @@ public class Main {
             return config;
         } catch (IOException e) {
             log.error("Couldn't read config file, exiting. Exception: " + e.toString());
-            //TODO: Tell the user to create a config file.
             System.exit(1);
             return null;
         }
