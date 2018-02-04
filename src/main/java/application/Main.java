@@ -15,16 +15,17 @@ public class Main {
 
     public static void main(String[] args) {
         readConfigFile();
-        new RSyncRunner(config.getBackupRootPath(), config.getJobs()).doRsync();
+        new RSyncRunner(config.getDBConfig(), config.getBackupRootPath(), config.getJobs()).doRsync();
     }
 
     private static void readConfigFile() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            ConfigJson configJson = objectMapper.readValue(new File("/home/robert/Src/git/backup/src/main/resources/config_example.json"), ConfigJson.class);
+            ConfigJson configJson = objectMapper.readValue(new File(System.getProperty("user.home") + "/.backups.conf"), ConfigJson.class);
             config = configJson.toConfig();
         } catch (IOException e) {
             log.error("Couldn't read config file. Exception: " + e.toString());
+            //TODO: Tell the user to create a config file.
         }
     }
 }

@@ -8,13 +8,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
-public class RSyncOutputHandler implements StreamingProcessOwner {
+public class RSyncOutput implements StreamingProcessOwner {
 
     private boolean doneCopying = false;
     RSyncResult.RSyncResultBuilder resultBuilder;
     Pattern numberPattern = Pattern.compile("\\d+");
 
-    public RSyncOutputHandler() {
+    public RSyncOutput() {
         resultBuilder = RSyncResult.builder();
     }
 

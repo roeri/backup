@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 
 public class ConfigJson {
+    @JsonProperty("database")
+    private DBConfigJson dbConfig;
+
     @JsonProperty("backupRootPath")
     private String backupRootPath;
 
@@ -16,8 +19,9 @@ public class ConfigJson {
     private List<JobJson> jobs;
 
     public Config toConfig() {
+        DBConfig dBConfig = dbConfig.toDBConfig();
         List<Job> jobs = this.jobs.stream().map(JobJson::toJob).collect(Collectors.toList());
-        return new Config(backupRootPath, jobs);
+        return new Config(dBConfig, backupRootPath, jobs);
     }
 }
 
