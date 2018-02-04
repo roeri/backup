@@ -1,10 +1,12 @@
 package rsync;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.ToString;
 
 @ToString
 @Builder
+@Getter
 public class RSyncResult {
     private int files;
     private int folders;

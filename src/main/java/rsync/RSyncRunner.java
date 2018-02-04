@@ -36,10 +36,10 @@ public class RSyncRunner {
             StreamingProcessOutput output = new StreamingProcessOutput(outputHandler);
             try {
                 Timestamp startTime = new Timestamp(Calendar.getInstance().getTime().getTime());
-                output.monitor(rsync.builder());
+                output.monitor(rsync.builder()); //TODO: IMPORTANT! May need to do some wait polling?!
                 Timestamp endTime = new Timestamp(Calendar.getInstance().getTime().getTime());
                 int duration = (int) (endTime.getTime() - startTime.getTime()) / 1000;
-                logResults(job.getName(), startTime, endTime, duration, outputHandler.getResult());
+                logResults(job, startTime, endTime, duration, outputHandler.getResult());
             } catch (Exception e) {
                 log.error("Failed to run rsync. Exception: " + e.toString());
                 //TODO: logFailure(job.getName));
@@ -47,13 +47,17 @@ public class RSyncRunner {
         }
     }
 
-    private void logResults(String jobName, Timestamp startTime, Timestamp endTime, int duration, RSyncResult rSyncResult) {
+    private void logResults(Job job, Timestamp startTime, Timestamp endTime, int duration, RSyncResult result) {
         String url = "jdbc:mysql://" + dbConfig.getHost() + "/" + dbConfig.getName();
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url, dbConfig.getUser(), dbConfig.getPass());
             Statement st = conn.createStatement();
-            st.executeUpdate("insert into simpletest values('" + jobName + "')");
+            String sql = String.format("insert into backups values('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+                    job.getName(), startTime, endTime, duration, result.getTransferredSize(), result.getSize(), result.getTransferSpeed(),
+                    result.getNewFiles(), result.getDeletedFiles(), job.getSourcePath(), backupRootPath);
+            st.executeUpdate(sql);
+            //"insert into simpletest values('" + job + "')"
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
