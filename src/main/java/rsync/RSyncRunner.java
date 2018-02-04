@@ -28,6 +28,7 @@ public class RSyncRunner {
 
     public void doRsync() {
         for (Job job : jobs) {
+            log.debug("Starting job {}.", job.getName());
             RSync rsync = new RSync()
                     .source(job.getSourcePath())
                     .destination(backupRootPath)
@@ -48,8 +49,8 @@ public class RSyncRunner {
                 logResults(job, startTime, endTime, duration, outputHandler.getResult());
             } catch (Exception e) {
                 log.error("Failed to run rsync. Exception: " + e.toString());
-                //TODO: logFailure(job.getDatabase));
             }
+            log.debug("Finished job {}.", job.getName());
         }
     }
 
