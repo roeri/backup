@@ -1,9 +1,9 @@
 package application.config.json;
 
-import application.config.DBConfig;
+import application.config.DbConfig;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DBConfigJson {
+public class DbConfigJson {
     @JsonProperty("hostname")
     private String hostname;
 
@@ -16,8 +16,8 @@ public class DBConfigJson {
     @JsonProperty("password")
     private String password;
 
-    public DBConfig toDBConfig() {
-        return new DBConfig(hostname, database, username, password);
+    public DbConfig toDbConfig() {
+        return new DbConfig(hostname, database, username, password);
     }
 
 }

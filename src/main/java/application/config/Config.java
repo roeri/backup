@@ -5,12 +5,10 @@ import lombok.Getter;
 
 import java.util.List;
 
-import static java.util.Collections.*;
-
 @Getter
 @AllArgsConstructor
 public class Config {
-    private DBConfig dBConfig;
+    private DbConfig dbConfig;
     private boolean dryRun;
     private boolean compress;
     private String backupRootPath;

@@ -1,7 +1,7 @@
 package application.config.json;
 
 import application.config.Config;
-import application.config.DBConfig;
+import application.config.DbConfig;
 import application.config.Job;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class ConfigJson {
     @JsonProperty("database")
-    private DBConfigJson dbConfig;
+    private DbConfigJson dbConfig;
 
     @JsonProperty("dryRun")
     private boolean dryRun;
@@ -26,7 +26,7 @@ public class ConfigJson {
     private List<JobJson> jobs;
 
     public Config toConfig() {
-        DBConfig dBConfig = dbConfig.toDBConfig();
+        DbConfig dBConfig = dbConfig.toDbConfig();
         List<Job> jobs = this.jobs.stream().map(JobJson::toJob).collect(Collectors.toList());
         return new Config(dBConfig, dryRun, compress, backupRootPath, jobs);
     }

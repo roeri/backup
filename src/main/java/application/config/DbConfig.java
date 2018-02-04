@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class DBConfig {
+public class DbConfig {
     private String hostname;
     private String database;
     private String username;

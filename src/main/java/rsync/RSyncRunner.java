@@ -1,6 +1,6 @@
 package rsync;
 
-import application.config.DBConfig;
+import application.config.DbConfig;
 import application.config.Job;
 import com.github.fracpete.processoutput4j.output.StreamingProcessOutput;
 import com.github.fracpete.rsync4j.RSync;
@@ -14,11 +14,11 @@ import java.util.List;
 public class RSyncRunner {
     private final boolean dryRun;
     private final boolean compress;
-    private final DBConfig dbConfig;
+    private final DbConfig dbConfig;
     private final String backupRootPath;
     private final List<Job> jobs;
 
-    public RSyncRunner(boolean dryRun, boolean compress, DBConfig dbConfig, String backupRootPath, List<Job> jobs) {
+    public RSyncRunner(boolean dryRun, boolean compress, DbConfig dbConfig, String backupRootPath, List<Job> jobs) {
         this.dryRun = dryRun;
         this.compress = compress;
         this.dbConfig = dbConfig;
