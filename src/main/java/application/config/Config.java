@@ -11,8 +11,10 @@ import static java.util.Collections.*;
 @AllArgsConstructor
 public class Config {
     private DBConfig dBConfig;
+    private boolean dryRun;
+    private boolean compress;
     private String backupRootPath;
     private List<Job> jobs;
 
-    public static final Config EMPTY = new Config(null, "", emptyList());
+    public static final Config EMPTY = new Config(null, false, false, "", emptyList());
 }

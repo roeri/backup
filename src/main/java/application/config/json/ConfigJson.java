@@ -13,6 +13,12 @@ public class ConfigJson {
     @JsonProperty("database")
     private DBConfigJson dbConfig;
 
+    @JsonProperty("dryRun")
+    private boolean dryRun;
+
+    @JsonProperty("compress")
+    private boolean compress;
+
     @JsonProperty("backupRootPath")
     private String backupRootPath;
 
@@ -22,7 +28,7 @@ public class ConfigJson {
     public Config toConfig() {
         DBConfig dBConfig = dbConfig.toDBConfig();
         List<Job> jobs = this.jobs.stream().map(JobJson::toJob).collect(Collectors.toList());
-        return new Config(dBConfig, backupRootPath, jobs);
+        return new Config(dBConfig, dryRun, compress, backupRootPath, jobs);
     }
 }
 

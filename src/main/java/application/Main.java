@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
         readConfigFile();
-        new RSyncRunner(config.getDBConfig(), config.getBackupRootPath(), config.getJobs()).doRsync();
+        new RSyncRunner(config.isDryRun(), config.isCompress(), config.getDBConfig(), config.getBackupRootPath(), config.getJobs()).doRsync();
     }
 
     private static void readConfigFile() {
@@ -23,6 +23,7 @@ public class Main {
         try {
             ConfigJson configJson = objectMapper.readValue(new File(System.getProperty("user.home") + "/.backups.conf"), ConfigJson.class);
             config = configJson.toConfig();
+            log.debug("Config read successfully.");
         } catch (IOException e) {
             log.error("Couldn't read config file. Exception: " + e.toString());
             //TODO: Tell the user to create a config file.

@@ -36,7 +36,7 @@ public class RSyncOutput implements StreamingProcessOwner {
 
     public RSyncResult getResult() {
         if (!doneCopying) {
-            log.error("trying to get result before done");
+            log.error("Trying to get result before done.");
         }
         return resultBuilder.build();
     }
@@ -71,7 +71,6 @@ public class RSyncOutput implements StreamingProcessOwner {
         if (line.contains("sent") && line.contains("received")) {
             parseTransferSpeed(numberPattern.matcher(line));
         }
-        System.out.println(line);
     }
 
     private void parseNumberOfFilesAndFolders(Matcher numberMatcher) {

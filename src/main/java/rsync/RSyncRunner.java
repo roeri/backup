@@ -12,11 +12,15 @@ import java.util.List;
 
 @Slf4j
 public class RSyncRunner {
+    private final boolean dryRun;
+    private final boolean compress;
     private final DBConfig dbConfig;
     private final String backupRootPath;
     private final List<Job> jobs;
 
-    public RSyncRunner(DBConfig dbConfig, String backupRootPath, List<Job> jobs) {
+    public RSyncRunner(boolean dryRun, boolean compress, DBConfig dbConfig, String backupRootPath, List<Job> jobs) {
+        this.dryRun = dryRun;
+        this.compress = compress;
         this.dbConfig = dbConfig;
         this.backupRootPath = backupRootPath;
         this.jobs = jobs;
@@ -30,7 +34,9 @@ public class RSyncRunner {
                     .archive(true)
                     .verbose(true)
                     .stats(true)
-                    .delete(true); //TODO: Add .compress(boolean) as a configurable option?
+                    .delete(true)
+                    .compress(compress)
+                    .listOnly(dryRun); //TODO: Add .compress(boolean) as a configurable option?
 
             RSyncOutput outputHandler = new RSyncOutput();
             StreamingProcessOutput output = new StreamingProcessOutput(outputHandler);
