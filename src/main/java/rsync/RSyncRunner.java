@@ -37,7 +37,7 @@ public class RSyncRunner {
                     .stats(true)
                     .delete(true)
                     .compress(compress)
-                    .listOnly(dryRun); //TODO: Add .compress(boolean) as a configurable option?
+                    .listOnly(dryRun);
 
             RSyncOutput outputHandler = new RSyncOutput();
             StreamingProcessOutput output = new StreamingProcessOutput(outputHandler);
