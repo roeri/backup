@@ -48,18 +48,21 @@ public class RSyncRunner {
     }
 
     private void logResults(Job job, Timestamp startTime, Timestamp endTime, int duration, RSyncResult result) {
-        String url = "jdbc:mysql://" + dbConfig.getHostname() + "/" + dbConfig.getDatabase();
-        Connection conn = null;
+        String url = "jdbc:mysql://" + dbConfig.getHostname() + "/" + dbConfig.getDatabase() + "?useSSL=false";
         try {
-            conn = DriverManager.getConnection(url, dbConfig.getUsername(), dbConfig.getPassword());
+            Connection conn = DriverManager.getConnection(url, dbConfig.getUsername(), dbConfig.getPassword());
             Statement st = conn.createStatement();
-            String sql = String.format("insert into backups values('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
-                    job.getName(), startTime, endTime, duration, result.getTransferredSize(), result.getSize(), result.getTransferSpeed(),
-                    result.getNewFiles(), result.getDeletedFiles(), job.getSourcePath(), backupRootPath);
+            String sql = createInsertSql(job, startTime, endTime, duration, result);
             st.executeUpdate(sql);
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("SQL error: " + e.getSQLState());
         }
+    }
+
+    private String createInsertSql(Job job, Timestamp startTime, Timestamp endTime, int duration, RSyncResult result) {
+        return String.format("insert into backups values('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+                job.getName(), startTime, endTime, duration, result.getTransferredSize(), result.getSize(), result.getTransferSpeed(),
+                result.getNewFiles(), result.getDeletedFiles(), job.getSourcePath(), backupRootPath);
     }
 }
