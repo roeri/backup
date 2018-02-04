@@ -25,6 +25,7 @@ public class RSyncOutput implements StreamingProcessOwner {
 
     @Override
     public void processOutput(String line, boolean stdout) {
+        log.debug(line);
         if (stdout) {
             if (doneCopying(line)) {
                 processOutput(line);

@@ -1,0 +1,32 @@
+<configuration> <!-- debug="true" -->
+    <property name="LOG_PATH" value="logs"/>
+    <property name="LOG_ARCHIVE" value="${LOG_PATH}/archive"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger{36} [%-5level] - %msg%n"/>
+    <property name="LOG_MAX_HISTORY" value="30"/>
+    <property name="LOG_TOTAL_SIZE_CAP" value="1MB"/>
+    <property name="LOG_CLEAN_HISTORY_ON_START" value="true"/>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+          <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/backups.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_ARCHIVE}/backups.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
+            <cleanHistoryOnStart>${LOG_CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+  <root level="debug">
+    <appender-ref ref="Console" />
+    <appender-ref ref="File" />
+  </root>
+</configuration>
