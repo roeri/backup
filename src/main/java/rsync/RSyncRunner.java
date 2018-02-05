@@ -41,14 +41,14 @@ public class RSyncRunner {
                 output.monitor(rsync.builder()); //TODO: IMPORTANT! May need to do some wait polling?!
                 results.add(outputHandler.getResult());
             } catch (Exception e) {
-                log.error("Failed to run rsync. Exception: " + e.toString());
+                log.error("Failed to run rsync. Exception: {}.", e.toString());
             }
             log.debug("Finished job {}.", job.getName());
         }
         try {
             logResults(results);
         } catch (SQLException e) {
-            log.error("SQL error: " + e.getSQLState());
+            log.error("SQL error: {}.", e.getSQLState());
         }
     }
 

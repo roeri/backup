@@ -24,7 +24,7 @@ public class Main {
             log.debug("Config read successfully.");
             return config;
         } catch (IOException e) {
-            log.error("Couldn't read config file, exiting. Exception: " + e.toString());
+            log.error("Couldn't read config file, exiting. Exception: {}.", e.toString());
             System.exit(1);
             return null;
         }

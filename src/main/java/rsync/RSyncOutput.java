@@ -47,7 +47,7 @@ public class RSyncOutput implements StreamingProcessOwner {
 
     public RSyncResult getResult() {
         if (!done) {
-            log.error("Trying to get result before done.");
+            log.error("Trying to get result before done. firstLinePassed={}, doneCopying={}, done={}.", firstLinePassed, doneCopying, done);
         }
         return resultBuilder.build();
     }
@@ -153,7 +153,7 @@ public class RSyncOutput implements StreamingProcessOwner {
             try {
                 size = Integer.parseInt(numberMatcher.group()); //Test with large numbers, may need to remove commas
             } catch (NumberFormatException e) {
-                log.error("Couldn't parse size from: " + numberMatcher.group());
+                log.error("Couldn't parse size from: {}.", numberMatcher.group());
             }
         }
         resultBuilder.size(size);
@@ -165,7 +165,7 @@ public class RSyncOutput implements StreamingProcessOwner {
             try {
                 transferredSize = Integer.parseInt(numberMatcher.group()); //Test with large numbers, may need to remove commas
             } catch (NumberFormatException e) {
-                log.error("Couldn't parse transferredSize from: " + numberMatcher.group());
+                log.error("Couldn't parse transferredSize from: {}.", numberMatcher.group());
             }
         }
         resultBuilder.transferredSize(transferredSize);
@@ -177,13 +177,13 @@ public class RSyncOutput implements StreamingProcessOwner {
             try {
                 transferSpeed = Integer.parseInt(numberMatcher.group()); //Test with large numbers, may need to remove commas
             } catch (NumberFormatException e) {
-                log.error("Couldn't parse transferSpeed from: " + numberMatcher.group());
+                log.error("Couldn't parse transferSpeed from: {}.", numberMatcher.group());
             }
         }
         resultBuilder.transferSpeed(transferSpeed);
     }
 
     private void processError(String line) {
-        log.error("Problem with rsync: " + line);
+        log.error("Problem with rsync: {}.", line);
     }
 }
