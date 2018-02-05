@@ -20,7 +20,7 @@ public class Main {
     private static Config readConfigFile() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            Config config = objectMapper.readValue(new File(System.getProperty("user.home") + "/.backups.conf"), ConfigJson.class).toConfig();
+            Config config = objectMapper.readValue(new File(System.getProperty("user.home") + "/.config/backup/backup.conf"), ConfigJson.class).toConfig();
             log.debug("Config read successfully.");
             return config;
         } catch (IOException e) {
