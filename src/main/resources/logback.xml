@@ -24,9 +24,12 @@
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
+    <appender name="File-Async" class="ch.qos.logback.core.AsyncAppender">
+        <appender-ref ref="File" />
+    </appender>
 
   <root level="debug">
     <appender-ref ref="Console" />
-    <appender-ref ref="File" />
+    <appender-ref ref="File-Async" />
   </root>
 </configuration>
