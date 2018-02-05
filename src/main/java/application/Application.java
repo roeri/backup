@@ -11,7 +11,7 @@ public class Application {
     public Application(Config config) {
         log.debug("Application started.");
         this.config = config;
-        RSyncRunner rSyncRunner = new RSyncRunner(config.isDryRun(), config.isCompress(), config.getDbConfig(), config.getBackupRootPath(), config.getJobs());
-        rSyncRunner.doRsync();
+        RSyncRunner rSyncRunner = new RSyncRunner(config);
+        rSyncRunner.runRsync();
     }
 }
