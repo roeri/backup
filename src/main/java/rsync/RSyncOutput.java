@@ -87,41 +87,46 @@ public class RSyncOutput implements StreamingProcessOwner {
 
     public void processOutput(String line) {
         if (line.contains("Number of files:")) {
-            ValueTuple<Integer, Integer> filesAndFolders = parseNumberOfFilesAndFolders(numberPattern.matcher(line));
+            ValueTuple<Integer, Integer> filesAndFolders = parseFilesAndFolders(numberPattern.matcher(line));
             resultBuilder.files(filesAndFolders.getA());
             resultBuilder.folders(filesAndFolders.getB());
         }
         if (line.contains("Number of created files:")) {
-            ValueTuple<Integer, Integer> filesAndFolders = parseNumberOfFilesAndFolders(numberPattern.matcher(line));
+            ValueTuple<Integer, Integer> filesAndFolders = parseFilesAndFolders(numberPattern.matcher(line));
             resultBuilder.filesCreated(filesAndFolders.getA());
             resultBuilder.foldersCreated(filesAndFolders.getB());
         }
         if (line.contains("Number of deleted files:")) {
-            ValueTuple<Integer, Integer> filesAndFolders = parseNumberOfFilesAndFolders(numberPattern.matcher(line));
+            ValueTuple<Integer, Integer> filesAndFolders = parseFilesAndFolders(numberPattern.matcher(line));
             resultBuilder.filesDeleted(filesAndFolders.getA());
             resultBuilder.foldersDeleted(filesAndFolders.getB());
         }
         if (line.contains("Total file size:")) {
-            line = "Total file size: 132,332,123,125,3223,12";
             long size = parseNumber(numberPattern.matcher(line));
             resultBuilder.size(size);
         }
         if (line.contains("Total transferred file size:")) {
-            parseTransferredSize(numberPattern.matcher(line));
+            long transferredSize = parseNumber(numberPattern.matcher(line));
+            resultBuilder.transferredSize(transferredSize);
         }
         if (line.contains("sent") && line.contains("received")) {
-            parseTransferSpeed(numberPattern.matcher(line));
+            int transferSpeed = (int) parseNumber(numberPattern.matcher(line));
+            resultBuilder.transferSpeed(transferSpeed);
         }
     }
 
-    private ValueTuple<Integer, Integer> parseNumberOfFilesAndFolders(Matcher numberMatcher) {
+    private ValueTuple<Integer, Integer> parseFilesAndFolders(Matcher numberMatcher) {
         int files = 0;
         int actualFiles = 0;
-        if (numberMatcher.find()) {
-            files = Integer.parseInt(numberMatcher.group());
-        }
-        if (numberMatcher.find()) {
-            actualFiles = Integer.parseInt(numberMatcher.group());
+        try {
+            if (numberMatcher.find()) {
+                files = Integer.parseInt(numberMatcher.group());
+            }
+            if (numberMatcher.find()) {
+                actualFiles = Integer.parseInt(numberMatcher.group());
+            }
+        } catch (NumberFormatException e) {
+            log.error("Couldn't parse number from: {}.", numberMatcher.group());
         }
         int folders = files - actualFiles;
         return new ValueTuple<>(actualFiles, folders);
@@ -138,43 +143,6 @@ public class RSyncOutput implements StreamingProcessOwner {
             }
         }
         return number;
-    }
-
-    private void parseTotalFileSize(Matcher numberMatcher) {
-        long size = 0;
-        if (numberMatcher.find()) {
-            try {
-                String number = numberMatcher.group().replace(",","");
-                size = Long.parseLong(number); //Test with large numbers, may need to remove commas
-            } catch (NumberFormatException e) {
-                log.error("Couldn't parse size from: {}.", numberMatcher.group());
-            }
-        }
-        resultBuilder.size(size);
-    }
-
-    private void parseTransferredSize(Matcher numberMatcher) {
-        int transferredSize = 0;
-        if (numberMatcher.find()) {
-            try {
-                transferredSize = Integer.parseInt(numberMatcher.group()); //Test with large numbers, may need to remove commas
-            } catch (NumberFormatException e) {
-                log.error("Couldn't parse transferredSize from: {}.", numberMatcher.group());
-            }
-        }
-        resultBuilder.transferredSize(transferredSize);
-    }
-
-    private void parseTransferSpeed(Matcher numberMatcher) {
-        int transferSpeed = 0;
-        if (numberMatcher.find() && numberMatcher.find() && numberMatcher.find()) {
-            try {
-                transferSpeed = Integer.parseInt(numberMatcher.group()); //Test with large numbers, may need to remove commas
-            } catch (NumberFormatException e) {
-                log.error("Couldn't parse transferSpeed from: {}.", numberMatcher.group());
-            }
-        }
-        resultBuilder.transferSpeed(transferSpeed);
     }
 
     private void processError(String line) {
