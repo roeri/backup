@@ -24,7 +24,7 @@
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
-    <appender name="File-Async" class="ch.qos.logback.core.AsyncAppender">
+    <appender name="File-Async" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="File" />
     </appender>
 
