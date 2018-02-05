@@ -1,6 +1,6 @@
 Backup
 ======
-This application uses rsync to incrementally back up files and log the results of the operation to a MYSQL database.
+This application is written in Java 9 and uses rsync to incrementally back up files and log the results of the operation to a MYSQL database.
 
 Config file
 ------
