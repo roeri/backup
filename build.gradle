@@ -29,7 +29,6 @@ jar {
     manifest {
         attributes(
                 'Main-Class': 'application.Main',
-                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
         )
     }
 }
