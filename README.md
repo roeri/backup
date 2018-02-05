@@ -10,6 +10,6 @@ Database setup
 Running the application
 ------
 After setting everything up in your config file (~/.config/backup/backup.conf), you can build the application by running:
-./gradlew build
-To run the application you simply run the script located at:
-./build/main/resources/run.sh
+> ./gradlew build
+To start the application you simply run the script located at:
+> ./build/main/resources/run.sh
