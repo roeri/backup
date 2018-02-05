@@ -15,17 +15,18 @@ public class RSyncResult {
 
     private Timestamp startTime;
     private Timestamp endTime;
-    private int duration;
+    private long duration;
 
     private int files;
     private int folders;
-    private int size;
+    private long size;
 
-    private int newFiles;
-    private int newFolders;
-    private int transferredSize;
+    private long transferredSize;
     private int transferSpeed;
 
-    private int deletedFiles;
-    private int deletedFolders;
+    private int filesCreated;
+    private int foldersCreated;
+
+    private int filesDeleted;
+    private int foldersDeleted;
 }

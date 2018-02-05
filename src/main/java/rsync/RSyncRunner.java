@@ -6,13 +6,10 @@ import application.config.Job;
 import com.github.fracpete.processoutput4j.output.StreamingProcessOutput;
 import com.github.fracpete.rsync4j.RSync;
 import lombok.extern.slf4j.Slf4j;
-import utils.ValueTuple;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Timer;
 
 @Slf4j
 public class RSyncRunner {
@@ -68,8 +65,13 @@ public class RSyncRunner {
     }
 
     private String createInsertSql(RSyncResult result) {
-        return String.format("insert into backups values('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
-                result.getJob().getName(), result.getStartTime(), result.getEndTime(), result.getDuration(), result.getTransferredSize(), result.getSize(), result.getTransferSpeed(),
-                result.getNewFiles(), result.getDeletedFiles(), result.getJob().getSourcePath(), config.getBackupRootPath());
+        return String.format("insert into backups (jobName, startTime, endTime, duration, files, folders, " +
+                        "size, transferredSize, transferSpeed, filesCreated, foldersCreated, filesDeleted, " +
+                        "foldersDeleted, sourcePath, targetPath) values('%s', '%s', '%s', '%s', '%s', '%s', '%s', " +
+                        "'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+                result.getJob().getName(), result.getStartTime(), result.getEndTime(), result.getDuration(),
+                result.getFiles(), result.getFolders(), result.getSize(), result.getTransferredSize(),
+                result.getTransferSpeed(), result.getFilesCreated(), result.getFoldersCreated(), result.getFilesDeleted(),
+                result.getFoldersDeleted(), result.getJob().getSourcePath(), config.getBackupRootPath());
     }
 }

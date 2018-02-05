@@ -4,6 +4,7 @@ import application.config.Job;
 import com.github.fracpete.processoutput4j.core.StreamingProcessOutputType;
 import com.github.fracpete.processoutput4j.core.StreamingProcessOwner;
 import lombok.extern.slf4j.Slf4j;
+import utils.ValueTuple;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -19,7 +20,7 @@ public class RSyncOutput implements StreamingProcessOwner {
     private Timestamp startTime;
     RSyncResult.RSyncResultBuilder resultBuilder;
 
-    Pattern numberPattern = Pattern.compile("\\d+");
+    Pattern numberPattern = Pattern.compile("\\d+(,\\d+)*");
 
     public RSyncOutput(Job job) {
         resultBuilder = RSyncResult.builder();
@@ -86,16 +87,24 @@ public class RSyncOutput implements StreamingProcessOwner {
 
     public void processOutput(String line) {
         if (line.contains("Number of files:")) {
-            parseNumberOfFilesAndFolders(numberPattern.matcher(line));
+            ValueTuple<Integer, Integer> filesAndFolders = parseNumberOfFilesAndFolders(numberPattern.matcher(line));
+            resultBuilder.files(filesAndFolders.getA());
+            resultBuilder.folders(filesAndFolders.getB());
         }
         if (line.contains("Number of created files:")) {
-            parseNumberOfNewFilesAndFolders(numberPattern.matcher(line));
+            ValueTuple<Integer, Integer> filesAndFolders = parseNumberOfFilesAndFolders(numberPattern.matcher(line));
+            resultBuilder.filesCreated(filesAndFolders.getA());
+            resultBuilder.foldersCreated(filesAndFolders.getB());
         }
         if (line.contains("Number of deleted files:")) {
-            parseNumberOfDeletedFilesAndFolders(numberPattern.matcher(line));
+            ValueTuple<Integer, Integer> filesAndFolders = parseNumberOfFilesAndFolders(numberPattern.matcher(line));
+            resultBuilder.filesDeleted(filesAndFolders.getA());
+            resultBuilder.foldersDeleted(filesAndFolders.getB());
         }
         if (line.contains("Total file size:")) {
-            parseTotalFileSize(numberPattern.matcher(line));
+            line = "Total file size: 132,332,123,125,3223,12";
+            long size = parseNumber(numberPattern.matcher(line));
+            resultBuilder.size(size);
         }
         if (line.contains("Total transferred file size:")) {
             parseTransferredSize(numberPattern.matcher(line));
@@ -105,7 +114,7 @@ public class RSyncOutput implements StreamingProcessOwner {
         }
     }
 
-    private void parseNumberOfFilesAndFolders(Matcher numberMatcher) {
+    private ValueTuple<Integer, Integer> parseNumberOfFilesAndFolders(Matcher numberMatcher) {
         int files = 0;
         int actualFiles = 0;
         if (numberMatcher.find()) {
@@ -115,43 +124,28 @@ public class RSyncOutput implements StreamingProcessOwner {
             actualFiles = Integer.parseInt(numberMatcher.group());
         }
         int folders = files - actualFiles;
-        resultBuilder.files(actualFiles);
-        resultBuilder.folders(folders);
+        return new ValueTuple<>(actualFiles, folders);
     }
 
-    private void parseNumberOfNewFilesAndFolders(Matcher numberMatcher) {
-        int newFiles = 0;
-        int actualNewFiles = 0;
+    private long parseNumber(Matcher numberMatcher) {
+        long number = 0;
         if (numberMatcher.find()) {
-            newFiles = Integer.parseInt(numberMatcher.group());
+            try {
+                String numberString = numberMatcher.group().replace(",","");
+                number = Long.parseLong(numberString); //Test with large numbers, may need to remove commas
+            } catch (NumberFormatException e) {
+                log.error("Couldn't parse number from: {}.", numberMatcher.group());
+            }
         }
-        if (numberMatcher.find()) {
-            actualNewFiles = Integer.parseInt(numberMatcher.group());
-        }
-        int newFolders = newFiles - actualNewFiles;
-        resultBuilder.newFiles(actualNewFiles);
-        resultBuilder.newFolders(newFolders);
-    }
-
-    private void parseNumberOfDeletedFilesAndFolders(Matcher numberMatcher) {
-        int deletedFiles = 0;
-        int actualDeletedFiles = 0;
-        if (numberMatcher.find()) {
-            deletedFiles = Integer.parseInt(numberMatcher.group());
-        }
-        if (numberMatcher.find()) {
-            actualDeletedFiles = Integer.parseInt(numberMatcher.group());
-        }
-        int deletedFolders = deletedFiles - actualDeletedFiles;
-        resultBuilder.deletedFiles(actualDeletedFiles);
-        resultBuilder.deletedFolders(deletedFolders);
+        return number;
     }
 
     private void parseTotalFileSize(Matcher numberMatcher) {
-        int size = 0;
+        long size = 0;
         if (numberMatcher.find()) {
             try {
-                size = Integer.parseInt(numberMatcher.group()); //Test with large numbers, may need to remove commas
+                String number = numberMatcher.group().replace(",","");
+                size = Long.parseLong(number); //Test with large numbers, may need to remove commas
             } catch (NumberFormatException e) {
                 log.error("Couldn't parse size from: {}.", numberMatcher.group());
             }
