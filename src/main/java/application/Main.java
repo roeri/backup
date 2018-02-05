@@ -21,7 +21,7 @@ public class Main {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Config config = objectMapper.readValue(new File(System.getProperty("user.home") + "/.config/backup/backup.conf"), ConfigJson.class).toConfig();
-            log.debug("Config read successfully.");
+            log.info("Config read successfully.");
             return config;
         } catch (IOException e) {
             log.error("Couldn't read config file, exiting. Exception: {}.", e.toString());

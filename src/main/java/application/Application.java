@@ -9,7 +9,7 @@ public class Application {
     private final Config config;
 
     public Application(Config config) {
-        log.debug("Application started.");
+        log.info("Application started.");
         this.config = config;
         RSyncRunner rSyncRunner = new RSyncRunner(config);
         rSyncRunner.runRsync();

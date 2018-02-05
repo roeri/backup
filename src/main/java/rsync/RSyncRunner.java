@@ -22,7 +22,7 @@ public class RSyncRunner {
     public void runRsync() {
         List<RSyncResult> results = new ArrayList<>();
         for (Job job : config.getJobs()) {
-            log.debug("Starting job {}.", job.getName());
+            log.info("Starting job {}.", job.getName());
             RSync rsync = new RSync()
                     .source(job.getSourcePath())
                     .destination(config.getBackupRootPath())
@@ -40,7 +40,7 @@ public class RSyncRunner {
             } catch (Exception e) {
                 log.error("Failed to run rsync. Exception: {}.", e.toString());
             }
-            log.debug("Finished job {}.", job.getName());
+            log.info("Finished job {}.", job.getName());
         }
         try {
             logResults(results);
@@ -50,7 +50,7 @@ public class RSyncRunner {
     }
 
     private void logResults(List<RSyncResult> results) throws SQLException {
-        log.debug("Logging results to database.");
+        log.info("Logging results to database.");
         DbConfig dbConfig = config.getDbConfig();
         String url = "jdbc:mysql://" + dbConfig.getHostname() + "/" + dbConfig.getDatabase() + "?useSSL=false";
         Connection conn = DriverManager.getConnection(url, dbConfig.getUsername(), dbConfig.getPassword());
@@ -61,7 +61,7 @@ public class RSyncRunner {
             st.executeUpdate(sql);
         }
         conn.close();
-        log.debug("Done logging results to database.");
+        log.info("Done logging results to database.");
     }
 
     private String createInsertSql(RSyncResult result) {
