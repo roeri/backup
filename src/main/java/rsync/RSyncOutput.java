@@ -1,21 +1,29 @@
 package rsync;
 
+import application.config.Job;
 import com.github.fracpete.processoutput4j.core.StreamingProcessOutputType;
 import com.github.fracpete.processoutput4j.core.StreamingProcessOwner;
 import lombok.extern.slf4j.Slf4j;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
 public class RSyncOutput implements StreamingProcessOwner {
-
+    private boolean firstLinePassed = false;
     private boolean doneCopying = false;
+    private boolean done = false;
+
+    private Timestamp startTime;
     RSyncResult.RSyncResultBuilder resultBuilder;
+
     Pattern numberPattern = Pattern.compile("\\d+");
 
-    public RSyncOutput() {
+    public RSyncOutput(Job job) {
         resultBuilder = RSyncResult.builder();
+        resultBuilder.job(job);
     }
 
     @Override
@@ -27,22 +35,34 @@ public class RSyncOutput implements StreamingProcessOwner {
     public void processOutput(String line, boolean stdout) {
         log.debug(line);
         if (stdout) {
-            if (doneCopying(line)) {
+            checkIfFirstLine(line);
+            if (shouldProcessOutput(line)) {
                 processOutput(line);
             }
+            checkIfDone(line);
         } else {
             processError(line);
         }
     }
 
     public RSyncResult getResult() {
-        if (!doneCopying) {
+        if (!done) {
             log.error("Trying to get result before done.");
         }
         return resultBuilder.build();
     }
 
-    private boolean doneCopying(String line) {
+    private void checkIfFirstLine(String line) {
+        if (firstLinePassed) {
+            return;
+        }
+        if (line.contains("sending incremental file list")) {
+            startTime = new Timestamp(Calendar.getInstance().getTime().getTime());
+            firstLinePassed = true;
+        }
+    }
+
+    private boolean shouldProcessOutput(String line) {
         if (doneCopying) {
             return true;
         }
@@ -51,6 +71,17 @@ public class RSyncOutput implements StreamingProcessOwner {
             return true;
         }
         return false;
+    }
+
+    private void checkIfDone(String line) {
+        if (line.contains("total size is") && line.contains("speedup is")) {
+            Timestamp endTime = new Timestamp(Calendar.getInstance().getTime().getTime());
+            int duration = (int) (endTime.getTime() - startTime.getTime()) / 1000;
+            resultBuilder.startTime(startTime);
+            resultBuilder.endTime(endTime);
+            resultBuilder.duration(duration);
+            done = true;
+        }
     }
 
     public void processOutput(String line) {

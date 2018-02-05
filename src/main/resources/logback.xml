@@ -8,14 +8,19 @@
 
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-          <pattern>${LOG_PATTERN}</pattern>
+            <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/backups.log</file>
+    <appender name="File-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${LOG_PATH}/backup_error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_ARCHIVE}/backups.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${LOG_ARCHIVE}/backup_error.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
             <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
             <cleanHistoryOnStart>${LOG_CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
@@ -24,12 +29,38 @@
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
-    <appender name="File-Async" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="File" />
+    <appender name="File-ERROR-Async" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="File-ERROR" />
     </appender>
 
-  <root level="debug">
-    <appender-ref ref="Console" />
-    <appender-ref ref="File-Async" />
-  </root>
+    <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>INFO</level>
+    </filter>-->
+
+    <appender name="File-DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${LOG_PATH}/backup_debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_ARCHIVE}/backup_debug.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
+            <cleanHistoryOnStart>${LOG_CLEAN_HISTORY_ON_START}</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="File-DEBUG-Async" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="File-DEBUG" />
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="Console" />
+        <appender-ref ref="File-ERROR-Async" />
+        <appender-ref ref="File-DEBUG-Async" />
+    </root>
 </configuration>
